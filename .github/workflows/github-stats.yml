@@ -36,15 +36,17 @@ jobs:
 
       - name: Gerar cards
         run: |
+          # Remove espaços e quebras de linha que costumam vir junto ao colar o token.
+          PAT_1="$(printf '%s' "$STATS_TOKEN" | tr -d '[:space:]')"
           if [ -z "$PAT_1" ]; then
             echo "::error::Crie o segredo STATS_TOKEN (token clássico sem escopos e sem expiração). Veja .github/scripts/gerar-stats.mjs"
             exit 1
           fi
-          node .github/scripts/gerar-stats.mjs
+          PAT_1="$PAT_1" node .github/scripts/gerar-stats.mjs
         env:
           # O GITHUB_TOKEN do Actions não serve: ele só enxerga este repositório
           # e o GitHub bloqueia a leitura de estrelas dos outros repositórios.
-          PAT_1: ${{ secrets.STATS_TOKEN }}
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
 
       - name: Salvar se mudou
         run: |
