@@ -1,10 +1,12 @@
 // Gera os cards do GitHub Stats como SVG, usando o código do fork
 // AlexandreRibeiro1/github-readme-stats (clonado em ./grs pelo workflow).
 //
-// Por que não usar a instância na Vercel: ela depende de um token pessoal
-// (PAT_1) que expira; quando expira, o card mostra "Downtime due to GitHub API
-// rate limiting". Aqui o token é o GITHUB_TOKEN do próprio workflow, que é
-// gerado a cada execução e nunca vence.
+// Por que não usar a instância na Vercel: o token dela (PAT_1) expirou e o
+// card passou a mostrar "Downtime due to GitHub API rate limiting" (é assim
+// que o github-readme-stats reporta "Bad credentials").
+//
+// Aqui o token vem do segredo STATS_TOKEN: um token clássico SEM escopos
+// (só lê dados públicos) e com "No expiration", para o problema não voltar.
 import { mkdir, writeFile } from "node:fs/promises";
 
 import { renderStatsCard } from "../../grs/src/cards/stats.js";

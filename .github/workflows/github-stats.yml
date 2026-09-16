@@ -35,9 +35,16 @@ jobs:
         working-directory: grs
 
       - name: Gerar cards
-        run: node .github/scripts/gerar-stats.mjs
+        run: |
+          if [ -z "$PAT_1" ]; then
+            echo "::error::Crie o segredo STATS_TOKEN (token clássico sem escopos e sem expiração). Veja .github/scripts/gerar-stats.mjs"
+            exit 1
+          fi
+          node .github/scripts/gerar-stats.mjs
         env:
-          PAT_1: ${{ secrets.GITHUB_TOKEN }}
+          # O GITHUB_TOKEN do Actions não serve: ele só enxerga este repositório
+          # e o GitHub bloqueia a leitura de estrelas dos outros repositórios.
+          PAT_1: ${{ secrets.STATS_TOKEN }}
 
       - name: Salvar se mudou
         run: |
